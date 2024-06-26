@@ -216,3 +216,34 @@ AND id_personnage = (SELECT id_personnage FROM personnage WHERE nom_personnage =
 AND id_bataille = (SELECT id_bataille FROM bataille WHERE nom_bataille = 'Attaque de la banque postale');
 
 
+
+
+-- Exemple de creation de vue 
+-- Create view 
+-- Sert à créer une vue, une représentation des données pour une exploitation visuelle.
+-- Contribue à sécuriser la base de données en cachant les structures des tables réelles.
+-- Simplifie les requêtes complexes en stockant la requête dans une vue sql 
+-- Améliore les performances des requêtes (résultat + rapide).
+
+
+
+CREATE VIEW batailleVillageGaulois AS
+SELECT 
+	p.nom_personnage,
+	SUM(pc.qte) AS nbCasque
+FROM 
+	personnage p, bataille b, prendre_casque pc
+WHERE 
+	p.id_personnage = pc.id_personnage
+AND
+	 pc.id_bataille = b.id_bataille
+AND 
+	b.nom_bataille = 'Bataille du village gaulois'
+GROUP BY
+	 p.id_personnage;
+	
+
+
+
+
+    SELECT * FROM bataillevillagegaulois;
