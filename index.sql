@@ -169,14 +169,17 @@ WHERE p.id_personnage NOT IN (
 -- A. Ajoutez le personnage suivant : Champdeblix, agriculteur résidant à la ferme Hantassion de Rotomagus.
 
 
-
+INSERT INTO personnage (nom_personnage, adresse_personnage, image_personnage, id_lieu, id_specialite)
+VALUES ('GEOFFROY', 'ferme HANTASSION', 'indisponible.jpg',
+	(SELECT id_lieu FROM lieu WHERE nom_lieu = 'Rotomagus'),
+	(SELECT id_specialite FROM specialite WHERE nom_specialite = 'Agriculteur'));
 
 
 
 -- B. Autorisez Bonemine à boire de la potion magique, elle est jalouse d'Iélosubmarine...
-
-
-
+INSERT INTO autoriser_boire (id_potion, id_personnage)
+VALUES ((SELECT id_potion FROM potion WHERE nom_potion ='Magique'), 
+			(SELECT id_personnage FROM personnage WHERE nom_personnage = 'GEOFFROY'));
 
 
 -- C. Supprimez les casques grecs qui n'ont jamais été pris lors d'une bataille.
@@ -186,12 +189,19 @@ WHERE p.id_personnage NOT IN (
 
 -- D. Modifiez l'adresse de Zérozérosix : il a été mis en prison à Condate
 
-
+UPDATE personnage 
+SET adresse_personnage ='10 rue de prison', 
+id_lieu = (SELECT id_lieu 
+				FROM lieu
+				WHERE nom_lieu ='Condate')
+WHERE nom_personnage = 'Zérozérosix';
 
 
 -- E. La potion 'Soupe' ne doit plus contenir de persil.
 
-
+DELETE FROM composer 
+WHERE id_potion =(SELECT id_potion FROM potion WHERE nom_potion = 'Soupe')
+AND id_ingredient = (SELECT id_ingredient FROM ingredient WHERE nom_ingredient = 'Percil');
 
 
 -- F. Obélix s'est trompé : ce sont 42 casques Weisenau, et non Ostrogoths, qu'il a pris lors de la bataille 'Attaque de la banque postale'. Corrigez son erreur !
