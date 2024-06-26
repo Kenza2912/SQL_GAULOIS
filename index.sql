@@ -183,7 +183,9 @@ VALUES ((SELECT id_potion FROM potion WHERE nom_potion ='Magique'),
 
 
 -- C. Supprimez les casques grecs qui n'ont jamais été pris lors d'une bataille.
-
+DELETE FROM casque 
+WHERE id_type_casque = (SELECT id_type_casque FROM type_casque WHERE nom_type_casque = 'Grec')
+AND id_casque NOT IN (SELECT DISTINCT id_casque FROM prendre_casque);
 
 
 
@@ -205,3 +207,12 @@ AND id_ingredient = (SELECT id_ingredient FROM ingredient WHERE nom_ingredient =
 
 
 -- F. Obélix s'est trompé : ce sont 42 casques Weisenau, et non Ostrogoths, qu'il a pris lors de la bataille 'Attaque de la banque postale'. Corrigez son erreur !
+
+UPDATE prendre_casque 
+SET id_casque = (SELECT id_casque FROM casque WHERE nom_casque = 'Weisenau'),
+					qte = 42
+WHERE id_casque = (SELECT id_casque FROM casque WHERE nom_casque = 'Ostrogoths')
+AND id_personnage = (SELECT id_personnage FROM personnage WHERE nom_personnage = 'Obélix')
+AND id_bataille = (SELECT id_bataille FROM bataille WHERE nom_bataille = 'Attaque de la banque postale');
+
+
